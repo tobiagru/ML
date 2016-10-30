@@ -10,6 +10,7 @@ from sklearn.decomposition import PCA
 import random
 from sklearn import datasets, linear_model
 from xml.dom import minidom
+import lib_IO
 
 
 training_samples = 278
@@ -35,13 +36,13 @@ cols = []
 
 print("Traversing images and shaping to feature vector")
 for file in os.listdir('data/set_train'):
-print(counter)
-file_path = os.path.join('data/set_train', file)
-img = nib.load(file_path)
-img_data = img.get_data()
-img_data = img_data[:,:,:,0]
-train[counter,:] = img_data.reshape(final)
-counter += 1
+    print(counter)
+    file_path = os.path.join('data/set_train', file)
+    img = nib.load(file_path)
+    img_data = img.get_data()
+    img_data = img_data[:,:,:,0]
+    train[counter,:] = img_data.reshape(final)
+    counter += 1
 
 mask = (train < 10)
 idx = mask.any(axis=0)
@@ -92,9 +93,10 @@ print("Next")
 
 model = LinearSVC()
 model.fit(train,train_labels.values.ravel())
-print(model.predict(test))
+y_predict = model.predict(test)
 print("Done")
 
+write_Y("prediction.csv",y_predict,np.arange(start=1,stop=138,dtype=np.uint32))
 
 # returns numpy array of data. Dimensions: samplesCount X 6
 # features are [abs CSF volume,  abs GM volume, abs WM volume, rel CSF volume, rel GM volume, rel WM volume]
@@ -135,7 +137,14 @@ def parseDataSetXML(samplesCount,filepath)
 		features_matrix[int(index)-1,:] = np.array([float(cAbs),float(gAbs),float(wAbs),float(cRel),float(gRel),float(wRel)])
 	return features_matrix
 
-
+def write_Y(fname, Y_pred, Ids):
+	if Y_pred.shape[0] != Ids.shape[0]:
+		print("error Ids- dimension of y matrix does not match number of expected predictions")
+		print('y: {0} - expected: {1}'.format(Y_pred.shape,Ids.shape))
+	else:
+		f = open(fname, 'w+')
+		np.savetxt(fname=f,X= np.column_stack([Ids,Y_pred]),
+				   fmt=['%d', '%d'],delimiter=',',header='Id,Prediction',comments='')
 
 
 
