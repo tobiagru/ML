@@ -97,7 +97,7 @@ print("Done")
 
 
 # returns numpy array of data. Dimensions: samplesCount X 6
-# features are [abs CSM volume,  abs GM volume, abs WM volume, rel CSM volume, rel GM volume, rel WM volume]
+# features are [abs CSF volume,  abs GM volume, abs WM volume, rel CSF volume, rel GM volume, rel WM volume]
 #	samples count:
 # 	training: 278
 # 	testing: 138
@@ -133,7 +133,7 @@ def parseDataSetXML(samplesCount,filepath)
 		wRel = vol_rel_CGW.split("[")[1].split(" ")[2]
 
 		features_matrix[int(index)-1,:] = np.array([float(cAbs),float(gAbs),float(wAbs),float(cRel),float(gRel),float(wRel)])
-		return features_matrix
+	return features_matrix
 
 
 
