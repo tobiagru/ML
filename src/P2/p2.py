@@ -181,7 +181,7 @@ cl = regr.predict(test)
 print("Classes")
 print(cl)
 
-result = np.zeros((test_samples,2))
+result = np.zeros((test_samples,2)).astype("f8")
 
 test_sequence = np.arange(1,test_samples+1)
 
@@ -193,4 +193,4 @@ for i in range(0,test_samples):
 
 print(result)
  
-np.savetxt("result_preProcessed.csv",result,fmt=['%f','$f'],delimiter=",",header="ID,Prediction",comments="")
+np.savetxt("result_preProcessed.csv",result,fmt=['%i', '%f8'], delimiter=",",header="ID,Prediction",comments="")
